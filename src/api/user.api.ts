@@ -1,12 +1,9 @@
+import { UserLogin } from "../types";
 import httpClient from "./httpClient";
 
-const END_POINT = "/user";
+const END_POINT = "/User";
 
-const getUsers = () => httpClient.get(END_POINT);
+const login = async (loginForm: UserLogin) =>
+  httpClient.post(`${END_POINT}/Login`, loginForm);
 
-// you can pass arguments to use as request parameters/data
-const getUsersByEnterpriseId = (id: string) =>
-  httpClient.get(`${END_POINT}/${id}`);
-// maybe more than one..
-
-export { getUsers, getUsersByEnterpriseId };
+export { login };

@@ -2,9 +2,10 @@
 import { ref, defineProps, PropType } from "vue";
 import { useToast } from "primevue/usetoast";
 import InputText from "primevue/inputtext";
+import Password from "primevue/password";
 import Button from "primevue/button";
 import Dropdown from "primevue/dropdown";
-import { Enterprise, User } from "../types";
+import { Enterprise, UserLogin } from "../types";
 
 defineProps({
   enterprises: Array as PropType<Array<Enterprise>>,
@@ -14,7 +15,7 @@ const user = ref({
   username: "",
   password: "",
   enterprise: "",
-} as User);
+} as UserLogin);
 
 const toast = useToast();
 
@@ -81,7 +82,7 @@ const submitHandler = () => {
       <span class="p-inputgroup-addon">
         <i class="pi pi-key"></i>
       </span>
-      <InputText
+      <Password
         aria-labelledby="password"
         placeholder="Password"
         v-model="user.password"

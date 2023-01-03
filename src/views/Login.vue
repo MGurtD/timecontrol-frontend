@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { getEnterprises } from "../api/enterprise.api";
-import LoginForm from "../components/LoginForm.vue";
 import { useRouter } from "vue-router";
-import { Enterprise, User } from "../types";
+import { useToast } from "primevue/usetoast";
+import LoginForm from "../components/LoginForm.vue";
+import { Enterprise, UserLogin } from "../types";
+import { getEnterprises } from "../api/enterprise.api";
+import { login } from "../api/user.api";
 const router = useRouter();
+const toast = useToast();
 
 const enterprises = ref([] as Array<Enterprise>);
 onMounted(async () => {
@@ -13,9 +16,19 @@ onMounted(async () => {
   console.log(enterprises);
 });
 
-const submitHandler = (user: User) => {
-  console.log(user);
-  router.push({ name: "Home" });
+const submitHandler = async (user: UserLogin) => {
+  try {
+    const response = await login(user);
+    localStorage.setItem("timecontrol.user", JSON.stringify(response.data));
+    router.push({ name: "Home" });
+  } catch (err) {
+    toast.add({
+      severity: "error",
+      detail: "Incorrect login",
+      closable: false,
+      life: 5000,
+    });
+  }
 };
 </script>
 
