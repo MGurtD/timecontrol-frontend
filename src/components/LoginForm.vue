@@ -1,28 +1,56 @@
 <script setup lang="ts">
+import { ref, defineProps, PropType } from "vue";
+import { useToast } from "primevue/usetoast";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Dropdown from "primevue/dropdown";
-import { ref } from "vue";
+import { Enterprise, User } from "../types";
 
-const username = ref("");
-const password = ref("");
-const enterprise = ref("");
-const enterprises = [
-  { name: "New York", code: "NY" },
-  { name: "Rome", code: "RM" },
-  { name: "London", code: "LDN" },
-  { name: "Istanbul", code: "IST" },
-  { name: "Paris", code: "PRS" },
-];
+defineProps({
+  enterprises: Array as PropType<Array<Enterprise>>,
+});
+
+const user = ref({
+  username: "",
+  password: "",
+  enterprise: "",
+} as User);
+
+const toast = useToast();
 
 const emit = defineEmits(["submit"]);
 
+const validateForm = (): string => {
+  if (user.value.username.length == 0) {
+    return "Fill the username, please";
+  }
+
+  if (user.value.password.length == 0) {
+    return "Fill the password, please";
+  }
+
+  return "";
+};
+
 const submitHandler = () => {
-  emit("submit");
+  const validation = validateForm();
+  if (validation.length > 0) {
+    toast.add({
+      severity: "warn",
+      summary: "Invalid Form",
+      detail: validation,
+      life: 3000,
+      closable: false,
+    });
+    return;
+  }
+
+  emit("submit", user.value);
 };
 </script>
 
 <template>
+  <Toast />
   <form class="login-form">
     <div class="p-inputgroup login-form-field">
       <span class="p-inputgroup-addon">
@@ -30,10 +58,10 @@ const submitHandler = () => {
       </span>
       <Dropdown
         aria-labelledby="enterprise"
-        v-model="enterprise"
+        v-model="user.enterprise"
         :options="enterprises"
         optionLabel="name"
-        optionValue="code"
+        optionValue="id"
         placeholder="Select an enterprise"
       />
     </div>
@@ -45,7 +73,7 @@ const submitHandler = () => {
       <InputText
         aria-labelledby="username"
         placeholder="Username"
-        v-model="username"
+        v-model="user.username"
       />
     </div>
 
@@ -56,7 +84,7 @@ const submitHandler = () => {
       <InputText
         aria-labelledby="password"
         placeholder="Password"
-        v-model="password"
+        v-model="user.password"
       />
     </div>
 
