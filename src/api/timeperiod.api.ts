@@ -1,10 +1,15 @@
+import { TimePeriod } from "../types";
 import httpClient from "./httpClient";
 
 const END_POINT = "/timeperiod";
 
-// you can pass arguments to use as request parameters/data
 const getTimePeriodsByUserId = (userId: string) =>
   httpClient.get(`${END_POINT}/${userId}`);
-// maybe more than one..
 
-export { getTimePeriodsByUserId };
+const createTimePeriod = (timePeriod: TimePeriod) =>
+  httpClient.post(END_POINT, timePeriod);
+
+const updateTimePeriod = (timePeriod: TimePeriod) =>
+  httpClient.put(`${END_POINT}/${timePeriod.id}`, timePeriod);
+
+export { getTimePeriodsByUserId, createTimePeriod, updateTimePeriod };

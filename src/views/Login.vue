@@ -41,6 +41,9 @@ const submitHandler = async (user: UserLogin) => {
 </template>
 
 <style scoped>
+.login {
+  text-align: center;
+}
 .logo {
   max-width: 256px;
   width: 40vw;
