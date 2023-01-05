@@ -86,6 +86,7 @@ const submitHandler = () => {
         aria-labelledby="password"
         placeholder="Password"
         v-model="user.password"
+        :feedback="false"
       />
     </div>
 

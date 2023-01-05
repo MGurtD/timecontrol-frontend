@@ -11,6 +11,8 @@ import {
   createTimePeriod,
   updateTimePeriod,
 } from "../api/timeperiod.api";
+import { calculateDifferenceBetweenTimes } from "../utils/functions";
+import * as constants from "../utils/constants";
 
 const user = ref(null as User | null);
 const enterprise = ref(null as Enterprise | null);
@@ -19,22 +21,23 @@ const timePeriods = ref([] as Array<TimePeriod>);
 const currentTimePeriod = ref(null as TimePeriod | null);
 const difference = ref("");
 
-let intervalId: number;
+let intervalId: number = 0;
 const router = useRouter();
 onMounted(async () => {
-  intervalId = setInterval(setCurrentDate, 1000);
+  setCurrentDateAndDifference();
 
-  const localStorageUser = localStorage.getItem("timecontrol.user");
+  const localStorageUser = localStorage.getItem(constants.USER_KEY);
   if (localStorageUser != null) {
     user.value = JSON.parse(localStorageUser);
 
     await fetchData();
+    intervalId = setInterval(setCurrentDateAndDifference, 1000);
   } else {
     router.push({ name: "Login" });
   }
 });
 onUnmounted(() => {
-  clearInterval(intervalId);
+  if (intervalId > 0) clearInterval(intervalId);
 });
 
 const fetchData = async () => {
@@ -50,41 +53,7 @@ const fetchData = async () => {
   currentTimePeriod.value = searchedTimePeriod || null;
 };
 
-function humanDiff(Current: number, Target: number) {
-  let CalcTime = Current - Target; // Current - Initiallized
-
-  let Years = Math.floor(CalcTime / 1000 / 60 / 60 / 24 / 7 / 4 / 12);
-  CalcTime -= Years * (1000 * 60 * 60 * 24 * 7 * 4 * 12);
-  let Months = Math.floor(CalcTime / 1000 / 60 / 60 / 24 / 7 / 4);
-  CalcTime -= Months * (1000 * 60 * 60 * 24 * 7 * 4);
-  let Weeks = Math.floor(CalcTime / 1000 / 60 / 60 / 24 / 7);
-  CalcTime -= Weeks * (1000 * 60 * 60 * 24 * 7);
-  // The calculation seconds to days works properly & The calculation of weeks to years may be off slightly
-  let Days = Math.floor(CalcTime / 1000 / 60 / 60 / 24);
-  CalcTime -= Days * (1000 * 60 * 60 * 24);
-  let Hours = Math.floor(CalcTime / 1000 / 60 / 60);
-  CalcTime -= Hours * (1000 * 60 * 60);
-  let Minutes = Math.floor(CalcTime / 1000 / 60);
-  CalcTime -= Minutes * (1000 * 60);
-  let Seconds = Math.floor(CalcTime / 1000);
-
-  return (
-    (Days != 0 ? Days + (Days == 1 ? "day " : "days ") : "") +
-    (Hours != 0
-      ? (Hours <= 9 ? "0" + Hours : Hours) + (Hours == 1 ? "hr " : "hrs ")
-      : "") +
-    (Minutes != 0
-      ? (Minutes <= 9 ? "0" + Minutes : Minutes) +
-        (Minutes == 1 ? "min " : "mins ")
-      : "") +
-    (Seconds != 0
-      ? (Seconds <= 9 ? "0" + Seconds : Seconds) +
-        (Seconds == 1 ? "sec " : "secs ")
-      : "")
-  );
-}
-
-const setCurrentDate = () => {
+const setCurrentDateAndDifference = () => {
   const now = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Europe/Madrid" })
   );
@@ -102,7 +71,7 @@ const setCurrentDate = () => {
     ).getTime();
     const nowInMs = new Date().getTime();
 
-    difference.value = humanDiff(nowInMs, currentInMs);
+    difference.value = calculateDifferenceBetweenTimes(nowInMs, currentInMs);
   }
 };
 
@@ -115,29 +84,35 @@ const closeTimePeriod = async () => {
   await updateTimePeriod(timePeriod);
   await fetchData();
 };
+
+const logoutHandler = () => {
+  localStorage.removeItem(constants.USER_KEY);
+  router.push({ name: "Login" });
+};
 </script>
 
 <template>
   <main class="home">
-    <MobileHeader></MobileHeader>
+    <MobileHeader @logout="logoutHandler" />
 
     <div v-if="enterprise">
-      <p>
-        {{ `${enterprise?.name}` }} > {{ `${user?.name} ${user?.surnames}` }}
-      </p>
+      <h3>{{ `${enterprise?.name}` }}</h3>
+      <h3>{{ `${user?.name} ${user?.surnames}` }}</h3>
       <p>{{ currentDate }}</p>
     </div>
 
     <div v-if="currentTimePeriod">
       <p>{{ difference }}</p>
       <Button class="p-button-danger" @click="closeTimePeriod"
-        >Clock-Out</Button
+        >Finalizar Fitxada</Button
       >
     </div>
     <div v-else>
-      <Button class="p-button-success" @click="openTimePeriod">Clock-In</Button>
+      <Button class="p-button-success" @click="openTimePeriod"
+        >Iniciar Fitxada</Button
+      >
     </div>
 
-    <MobileNav></MobileNav>
+    <MobileNav />
   </main>
 </template>

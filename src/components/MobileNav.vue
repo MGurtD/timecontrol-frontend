@@ -20,7 +20,7 @@
   width: 100vw;
   padding: 0.5rem;
   border-top: 1px #242424 solid;
-  background-color: #abc9fb;
+  background-color: var(--indigo-400);
 }
 .nav-links {
   display: grid;
