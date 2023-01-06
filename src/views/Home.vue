@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Button from "primevue/button";
-import MobileHeader from "../components/MobileHeader.vue";
-import MobileNav from "../components/MobileNav.vue";
 import { Enterprise, TimePeriod, User } from "../types";
 import { useRouter } from "vue-router";
 import { getEnterprise } from "../api/enterprise.api";
@@ -84,17 +82,10 @@ const closeTimePeriod = async () => {
   await updateTimePeriod(timePeriod);
   await fetchData();
 };
-
-const logoutHandler = () => {
-  localStorage.removeItem(constants.USER_KEY);
-  router.push({ name: "Login" });
-};
 </script>
 
 <template>
   <main class="home">
-    <MobileHeader @logout="logoutHandler" />
-
     <div v-if="enterprise">
       <h3>{{ `${enterprise?.name}` }}</h3>
       <h3>{{ `${user?.name} ${user?.surnames}` }}</h3>
@@ -112,7 +103,5 @@ const logoutHandler = () => {
         >Iniciar Fitxada</Button
       >
     </div>
-
-    <MobileNav />
   </main>
 </template>

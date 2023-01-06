@@ -35,7 +35,7 @@ const submitHandler = async (user: UserLogin) => {
 <template>
   <div class="login">
     <img class="logo" src="../assets/images/logo.png" />
-    <h3>Timecontrol Login</h3>
+    <h3>Timecontrol</h3>
     <LoginForm :enterprises="enterprises" @submit="submitHandler" />
   </div>
 </template>

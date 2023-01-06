@@ -45,5 +45,6 @@ const emitLogout = () => {
 }
 .header-logout:hover {
   cursor: pointer;
+  color: #fff;
 }
 </style>

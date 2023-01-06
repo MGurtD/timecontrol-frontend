@@ -1,11 +1,29 @@
+<script setup lang="ts">
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const isSelected = (name: string): boolean => {
+  return route.name === name;
+};
+const router = useRouter();
+const navigate = (name: string) => {
+  if (route.name !== name) {
+    router.push({ name });
+  }
+};
+</script>
+
 <template>
   <nav class="nav">
     <div class="nav-links">
-      <div class="nav-link">
-        <i class="pi pi-clock"></i>
+      <div class="nav-link" @click="navigate('Home')">
+        <i class="pi pi-clock" :class="{ selected: isSelected('Home') }"></i>
       </div>
-      <div class="nav-link">
-        <i class="pi pi-list"></i>
+      <div class="nav-link" @click="navigate('TimePeriods')">
+        <i
+          class="pi pi-list"
+          :class="{ selected: isSelected('TimePeriods') }"
+        ></i>
       </div>
     </div>
   </nav>
@@ -37,5 +55,8 @@
 .nav-link i {
   font-size: 1.5rem;
   text-align: center;
+}
+.selected {
+  color: #fff;
 }
 </style>
