@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, PropType } from "vue";
+import { ref, PropType } from "vue";
 import { useToast } from "primevue/usetoast";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
@@ -23,11 +23,11 @@ const emit = defineEmits(["submit"]);
 
 const validateForm = (): string => {
   if (user.value.username.length == 0) {
-    return "Fill the username, please";
+    return "Introduzca el usuario";
   }
 
   if (user.value.password.length == 0) {
-    return "Fill the password, please";
+    return "Introduzca la contraseña";
   }
 
   return "";
@@ -38,7 +38,7 @@ const submitHandler = () => {
   if (validation.length > 0) {
     toast.add({
       severity: "warn",
-      summary: "Invalid Form",
+      summary: "Formulario inválido",
       detail: validation,
       life: 3000,
       closable: false,
@@ -51,7 +51,6 @@ const submitHandler = () => {
 </script>
 
 <template>
-  <Toast />
   <form class="login-form">
     <div class="p-inputgroup login-form-field">
       <span class="p-inputgroup-addon">
@@ -63,7 +62,7 @@ const submitHandler = () => {
         :options="enterprises"
         optionLabel="name"
         optionValue="id"
-        placeholder="Select an enterprise"
+        placeholder="Empresa"
       />
     </div>
 
@@ -73,7 +72,7 @@ const submitHandler = () => {
       </span>
       <InputText
         aria-labelledby="username"
-        placeholder="Username"
+        placeholder="Usuario"
         v-model="user.username"
       />
     </div>
@@ -84,13 +83,15 @@ const submitHandler = () => {
       </span>
       <Password
         aria-labelledby="password"
-        placeholder="Password"
+        placeholder="Contraseña"
         v-model="user.password"
         :feedback="false"
       />
     </div>
 
-    <Button class="login-form-button" @click="submitHandler">Submit</Button>
+    <Button class="login-form-button" @click="submitHandler"
+      >Iniciar sesión</Button
+    >
   </form>
 </template>
 

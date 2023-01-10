@@ -1,5 +1,6 @@
 import { App as VueApp, createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
+import { createPinia } from "pinia";
 import "./style.css";
 import App from "./App.vue";
 import Home from "./views/Home.vue";
@@ -15,7 +16,8 @@ const router = createRouter({
   ],
 });
 
-const app: VueApp<Element> = createApp(App).use(router);
+const pinia = createPinia();
+const app: VueApp<Element> = createApp(App).use(router).use(pinia);
 
 import PrimeVue from "primevue/config";
 import ToastService from "primevue/toastservice";

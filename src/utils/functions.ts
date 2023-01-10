@@ -22,7 +22,7 @@ export const calculateDifferenceBetweenTimes = (
   CalcTime -= Minutes * (1000 * 60);
   let Seconds = Math.floor(CalcTime / 1000);
 
-  return (
+  let differenceStr =
     (Days != 0 ? Days + (Days == 1 ? "day " : "days ") : "") +
     (Hours != 0
       ? (Hours <= 9 ? "0" + Hours : Hours) + (Hours == 1 ? "hr " : "hrs ")
@@ -34,6 +34,6 @@ export const calculateDifferenceBetweenTimes = (
     (Seconds != 0
       ? (Seconds <= 9 ? "0" + Seconds : Seconds) +
         (Seconds == 1 ? "sec " : "secs ")
-      : "")
-  );
+      : "");
+  return differenceStr.toLowerCase().includes("nan") ? "" : differenceStr;
 };

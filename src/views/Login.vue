@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "../store";
 import { useToast } from "primevue/usetoast";
 import LoginForm from "../components/LoginForm.vue";
 import { Enterprise, UserLogin } from "../types";
 import { getEnterprises } from "../api/enterprise.api";
-import { login } from "../api/user.api";
+const store = useStore();
 const router = useRouter();
 const toast = useToast();
 
@@ -13,18 +14,17 @@ const enterprises = ref([] as Array<Enterprise>);
 onMounted(async () => {
   let response = await getEnterprises();
   enterprises.value = response.data;
-  console.log(enterprises);
 });
 
 const submitHandler = async (user: UserLogin) => {
-  try {
-    const response = await login(user);
-    localStorage.setItem("timecontrol.user", JSON.stringify(response.data));
+  await store.login(user);
+  if (store.isLogged) {
     router.push({ name: "Home" });
-  } catch (err) {
+  } else {
     toast.add({
       severity: "error",
-      detail: "Incorrect login",
+      summary: "Login incorrecte",
+      detail: "Les credencials introduides no són vàlides",
       closable: false,
       life: 5000,
     });

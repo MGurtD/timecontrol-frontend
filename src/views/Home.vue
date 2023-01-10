@@ -95,12 +95,12 @@ const closeTimePeriod = async () => {
     <div v-if="currentTimePeriod">
       <p>{{ difference }}</p>
       <Button class="p-button-danger" @click="closeTimePeriod"
-        >Finalizar Fitxada</Button
+        >Finalizar Fichada</Button
       >
     </div>
     <div v-else>
       <Button class="p-button-success" @click="openTimePeriod"
-        >Iniciar Fitxada</Button
+        >Iniciar Fichada</Button
       >
     </div>
   </main>

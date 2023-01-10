@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { defineEmits } from "vue";
-
 const emits = defineEmits(["logout"]);
 
 const emitLogout = () => {
